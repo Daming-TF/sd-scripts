@@ -1,0 +1,32 @@
+# 成人
+# 一个粉色衣服女孩，黄色的咖啡店
+1girl wearing pink dress, in yellow coffee shop
+# 一个穿白色裙子的女孩，丛林，旁边有小动物
+A girl in a white dress in the jungle with small animals next to her
+# 一位男生打字，旁边有台灯，嘴里叼着烟
+A boy is typing with a desk lamp next to him and a cigarette in his mouth, white simple background
+# 两个嘻哈歌手正在唱说唱，嘻哈的服饰，在地下酒吧
+Two hip hop singers are singing rap, hip hop costumes, in a speakeasy
+# 一个男人戴着头戴式耳机听音乐，他的表情很浮夸，眼睛紧闭，嘴巴长得很大
+A man listening to music wearing headphones, his expression is pompous, his eyes are closed, and his mouth is large
+# 一个女人正在跑步机上跑步，旁边还有一个男人在另外一台跑步机上跑，背景是健身房
+A woman is running on a treadmill next to a man running on another treadmill with the gym in the background
+# 儿童
+# 小孩戴帽子，黄猫，街道，晴天
+1child with hat, yellow cat, street, sunny day
+# 一个女孩穿着蓝色背带裤，在开心的奔跑，手里拿着风车，秋天，大自然，落叶
+A girl wearing blue suspenders,running happily, holding a windmill, autumn, nature, fallen leaves
+# 原本数据集
+# 男孩，灰色裤子，微笑，手插着口袋，夹克，长袖子，白色鞋子，站着，拳击手套
+1boy, pants, grey pants, smile, hands in pockets, jacket, long sleeves, white footwear, short hair, standing, grey footwear, boxing gloves
+# 黄色衬衫，1个女孩，粉色鞋子，黑色裤子，箭头(符号)，裤子，短袖，闭上眼睛，坐着，靴子
+yellow shirt, 1girl, pink footwear, black pants, arrow (symbol), pants, short sleeves, closed eyes, sitting, boots
+# 女孩，长发，珠宝，耳环，花，白衬衫，太阳镜，白鞋，短袖，坐着，有色眼镜，长发
+1girl, long hair, jewelry, earrings, flower, white shirt, sunglasses, white footwear, short sleeves, sitting, tinted eyewear, very long hair
+# 女孩，长发，珠宝，耳环，花，白衬衫，太阳镜，白鞋，短袖，坐着，有色眼镜，长发
+green pants, orange jacket, 1boy, pants, jacket, hat, hood, long sleeves, yellow footwear, sneakers, blue headwear, hood down, mask, orange footwear, socks, blue footwear, drawstring, beanie, backwards hat, mouth mask
+# 篮球，女孩，帽子，辫子，深色皮肤，耐克，微笑，白色袜子，黑色短裤，袜子，双辫子，深色皮肤的女性，短裤，黑色头饰，肚脐，长发，棒球帽
+basketball, 1girl, hat, braid, dark skin, nike, smile, white socks, black shorts, socks, twin braids, dark-skinned female, shorts, black headwear, midriff, long hair, baseball cap
+# 篮球，1boy，短裤，篮球制服，运动服，球，限量调色板，黑眼睛，红衬衫，短发，无袖，红色主题
+basketball, 1boy, shorts, basketball uniform, sportswear, ball, limited palette, black eyes, red shirt, short hair, sleeveless, red theme
+

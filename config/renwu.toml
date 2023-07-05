@@ -1,0 +1,13 @@
+[general]
+enable_bucket = true                        # Whether to use Aspect Ratio Bucketing
+
+[[datasets]]
+resolution = 512                            # Training resolution
+batch_size = 2                              # Batch size
+
+  [[datasets.subsets]]
+  image_dir = 'E:\Data\renwu_test'                     # Specify the folder containing the training images
+  caption_extension = '.txt'            # Caption file extension; change this if using .txt
+  # num_repeats = 10                          # Number of repetitions for training images
+
+  # Write the following only when using regularization images. Remove it if not using them.
