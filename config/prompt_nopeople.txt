@@ -1,0 +1,14 @@
+# 风景
+# 青山绿水，远处高高的雪山
+Green mountains, tall snow-capped mountains in the distance
+# 风景，户外，草，鸟，树，房子，天空，山，烟囱，桌子，钟楼，自然，小路
+scenery, outdoors, grass, bird, tree, house, sky, mountain, chimney, table, clock tower, nature, path
+# 亭子走廊，阳光照进来，枝形吊灯，一点绿色植物
+Pavilion corridor, sunlight coming in, chandeliers, a little greenery
+# 动物
+# 一只狗坐在椅子上
+1dog sitting in a chair
+# 两只鹤，在荷塘里，远处的山峦和瀑布，白云朵朵
+Two cranes, in the lotus pond, mountains and waterfalls in the distance, white clouds
+# 两只兔子挨着坐在地上，他们抬头看月亮，背景是月光皎皎的夜晚
+Two rabbits sitting next to each other on the ground, they look up at the moon with a moonlit night in the background

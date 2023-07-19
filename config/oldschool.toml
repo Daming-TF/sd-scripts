@@ -6,7 +6,7 @@ resolution = 512                            # Training resolution
 batch_size = 2                              # Batch size
 
   [[datasets.subsets]]
-  image_dir = 'E:\Data\TrainData\healing'                     # Specify the folder containing the training images
+  image_dir = 'E:\Data\TrainData\oldschool'                     # Specify the folder containing the training images
   caption_extension = '.txt'            # Caption file extension; change this if using .txt
  # num_repeats = 10                          # Number of repetitions for training images
 

@@ -18,6 +18,9 @@ def concatenate_images(img_paths, save_path, row=4, col=4):
     for i, img_path in enumerate(img_paths):
         image = cv2.imread(img_path)
 
+        if image is None:
+            continue
+
         row_index = i // col
         column_index = i % col
         left = column_index * w
@@ -29,9 +32,10 @@ def concatenate_images(img_paths, save_path, row=4, col=4):
 
 
 if __name__ in '__main__':
-    image_dir = r'E:\Data\test\debug'
-    output_path = r'E:\Data\test\debug2.png'
+    image_dir = r'D:\seekoo\inpainting\Adobe'
+    output_path = r'D:\seekoo\inpainting\Adobe\14.png'
 
-    img_paths = [os.path.join(image_dir, name) for name in os.listdir(image_dir) if os.path.splitext(name)[1] == '.png']
-    concatenate_images(img_paths, output_path)
+    img_paths = [os.path.join(image_dir, name) for name in os.listdir(image_dir)
+                 if os.path.splitext(name)[1] == '.png' and '14-' in name]
+    concatenate_images(img_paths, output_path, row=2, col=2)
 

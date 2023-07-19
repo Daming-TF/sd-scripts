@@ -13,36 +13,6 @@ A man listening to music wearing headphones, his expression is pompous, his eyes
 A woman is running on a treadmill next to a man running on another treadmill with the gym in the background
 # 一个穿着白色吊带裙，手里拿着饮料的女人对背景中的海滩很满意
 A woman in a white slip dress with a drink in her hand is happy with the beach in the background
-# 一名身穿黑色和服的男子望着前方，背景是日式内饰
-A man sitting in a black kimono looks ahead with a Japanese-style interior in the background
-# 一名身穿黑色连衣裙的女子拿着麦克风唱歌，背景是舞台
-A woman in a black dress is holding a microphone and singing, with the stage in the background
-# 身穿红色和服的女子举起左手挡住阳光，右手拿着以树林为背景的扇子
-A woman wearing a red kimono raises her left hand to block the sun and her right hand holds a fan with a woods in the background
-# 一位手持黄色雨伞的妇女抬头望向远方，背景是街道
-A woman holding a yellow umbrella looks up into the distance with the street in the background
-# 一名身穿卫衣的男子爬过铁栅栏，背景是街道
-A man in a hoodie climbs over an iron fence with the street in the background
-# 一名黑人运动员准备扣篮，他在空中跳跃，背景是篮球馆
-A black athlete is preparing to dunk as he leaps through the air with a basketball gym in the background
-# 一个男人正在滑雪，背景是雪
-A man is skiing with snow in the background
-# 一个坐在红色座位上的圣诞老人被一只鹿拉着跑，背景是夜空
-A Santa Claus sitting on a red seat is pulled by a deer to run, with the night sky in the background
-# 一对夫妇带着他们的孩子走在后面
-A couple walking with their children in the background
-# 一个戴着帽子的男人仰望天空，背景是一个植物温室
-A man in a hat looks up at the sky with a plant greenhouse in the background
-# 一个手里拿着花束的女人坐在木屋前的地板上，背景是丛林
-A woman with a bouquet in her hand sits on the floor in front of a log cabin with a jungle in the background
-# 一个身穿红色连衣裙的女人枕在以海边为背景的礁石上
-A woman in a red dress is pillowed on a reef with the seaside in the background
-# 小孩戴帽子，黄猫，街道，晴天
-1child with hat, yellow cat, street, sunny day
-# 一个女孩穿着蓝色背带裤，在开心的奔跑，手里拿着风车，秋天，大自然，落叶
-A girl wearing blue suspenders,running happily, holding a windmill, autumn, nature, fallen leaves
-# 一个女孩穿着华丽的衣服，女孩拿着一个花盆，在花园里，阳光灿烂
-A girl is wearing a gorgeous dress, the girl is holding a flower pot, in the garden, the sun is shining
 
 
 # 原本数据集

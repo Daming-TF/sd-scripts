@@ -12,8 +12,9 @@ sys.path.append(os.path.dirname(current_dir))
 from library.lpw_stable_diffusion import StableDiffusionLongPromptWeightingPipeline
 import library.model_util as model_util
 import library.train_util as train_util
-from networks.merge_lora import save_to_file, merge_lora_models, merge_to_sd_model
-from prompt_preprocess import prompt_preprocess
+from networks.merge_lora import save_to_file, merge_lora_models
+from networks.merge_lora import merge_to_sd_model, layerwise_merge, layerwise_merge_enhanced_version
+from my_tool.prompt_preprocess import prompt_preprocess
 
 
 # scheduler:
@@ -23,18 +24,41 @@ SCHEDULER_TIMESTEPS = 1000
 SCHEDLER_SCHEDULE = "scaled_linear"
 
 
-def image_process(image, info):
-    # add remark info
-    position = (10, 30)  # 文字的位置坐标
-    font = cv2.FONT_HERSHEY_SIMPLEX  # 文字的字体
-    font_scale = 0.5  # 文字的大小
-    color = (0, 0, 255)  # 文字的颜色，这里使用红色 (BGR格式)
-    thickness = 1  # 文字的线宽
+# def train_info_record(infos, save_dir):
+#     txt_path = os.path.join(save_dir, 'record.txt')
+#     with open(txt_path, 'a', encoding="utf-8") as file:
+#         # file.write(filename + '\n')
+#         for info in infos.split('@@'):
+#             file.write(info.rep + '\n')
 
+
+def image_process(image, info):
     image = cv2.cvtColor(np.array(image).astype(np.uint8), cv2.COLOR_RGB2BGR)
-    cv2.putText(image, info, position, font, font_scale, color, thickness)
+
+    # add remark info
+    org = (10, 30)  # 文字的位置坐标
+    font = cv2.FONT_HERSHEY_SIMPLEX  # 文字的字体
+    font_scale = 1  # 文字的大小
+    color = (0, 0, 255)  # 文字的颜色，这里使用红色 (BGR格式)
+    thickness = 2  # 文字的线宽
+
+    (_, text_height), _ = cv2.getTextSize('A', font, font_scale, thickness)
+
+    infos = info.split('@')
+    for i, info in enumerate(infos):
+        position = (org[0], org[1]+i*text_height)
+        cv2.putText(image, info, position, font, font_scale, color, thickness)
 
     return image
+
+
+def seed_init(seed):
+    torch.cuda.manual_seed(seed)
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+    torch.manual_seed(seed)
 
 
 def image_inference(text_encoder, vae, unet, args):
@@ -84,18 +108,15 @@ def image_inference(text_encoder, vae, unet, args):
     device = torch.device(type='cuda')
     pipeline.to(device)
 
+    # # record layer wise info
+    # train_info_record(info, save_dir)
+
     for i, prompt_txt in enumerate(prompts):
         prompt, height, width, sample_steps, scale, negative_prompt, seed = prompt_preprocess(prompt_txt)
 
+        seed = args.seed if seed is None else seed
         if seed is not None:
-            torch.cuda.manual_seed(args.seed)
-            random.seed(seed)
-            np.random.seed(seed)
-            torch.backends.cudnn.deterministic = True
-            torch.backends.cudnn.benchmark = False
-            torch.manual_seed(seed)
-
-
+            seed_init(seed)
 
         height = max(64, height - height % 8)  # round to divisible by 8
         width = max(64, width - width % 8)  # round to divisible by 8
@@ -111,14 +132,25 @@ def image_inference(text_encoder, vae, unet, args):
             negative_prompt=negative_prompt,
         ).images[0]
 
+        # info process
+        prompt = prompt.replace(', ', '@').replace(' ', '_')
+        if negative_prompt is None:
+            negative_prompt = ''
+        else:
+            negative_prompt = negative_prompt.replace(', ', '@').replace(' ', '_')
+
+        # filename = f"{prompt}@@{negative_prompt}.png"
+        filename = f"{prompt[:50]}.png"
+
         image = image_process(image, info)
 
-        filename = f"{prompt}_{negative_prompt}.png"
+        print(f"saving >> {os.path.join(save_dir, filename)} <<  ......")
         cv2.imwrite(os.path.join(save_dir, filename), image)
 
 
 def merge_param(args):
-    assert len(args.models) == len(args.ratios)
+    if args.ratios is not None and args.locked_keys is not None:
+        assert len(args.locked_keys) == len(args.ratios)
     def str_to_dtype(p):
         if p == "float":
             return torch.float
@@ -140,11 +172,31 @@ def merge_param(args):
         text_encoder, vae, unet = model_util.load_models_from_stable_diffusion_checkpoint(args.v2, args.sd_model)
 
         # merge param
-        merge_to_sd_model(text_encoder, unet, args.models, args.ratios, merge_dtype)
+        if args.class_blocks_ratios is not None:
+            layerwise_merge(text_encoder, unet, args.models, merge_dtype,
+                            locked_keys=args.locked_keys,
+                            class_blocks_ratios=args.class_blocks_ratios)
+        elif args.multi_lora_ratios is not None:
+            layerwise_merge_enhanced_version(text_encoder, unet, args.models, merge_dtype,
+                                             locked_keys=args.locked_keys,
+                                             multi_lora_ratios=args.multi_lora_ratios)
+        else:
+            merge_to_sd_model(text_encoder, unet, args.models, args.ratios, merge_dtype, locked_keys=args.locked_keys)
+
+        # if args.class_blocks_index is None and args.class_blocks_ratios is None:
+        #     merge_to_sd_model(text_encoder, unet, args.models, args.ratios, merge_dtype, locked_keys=args.locked_keys)
+        # elif args.class_blocks_index is not None and args.class_blocks_ratios is not None:
+        #     layer_wise_merge(text_encoder, unet, args.models, args.ratios, merge_dtype,
+        #                      locked_keys=args.locked_keys,
+        #                      # class_blocks_index=args.class_blocks_index,
+        #                      class_blocks_ratios=args.class_blocks_ratios)
+        # else:
+        #     ValueError("Parameters '--class_blocks_index' or '--class_blocks_ratios' are incorrect")
 
         # save merge_checkpoint
-        print(f"saving SD model to: {args.save_to}")
-        model_util.save_stable_diffusion_checkpoint(args.v2, args.save_to, text_encoder, unet, args.sd_model, 0, 0, save_dtype, vae)
+        if args.save_to is not None:
+            print(f"saving SD model to: {args.save_to}")
+            model_util.save_stable_diffusion_checkpoint(args.v2, args.save_to, text_encoder, unet, args.sd_model, 0, 0, save_dtype, vae)
 
         # text2image
         unet.eval()
@@ -187,15 +239,12 @@ def setup_parser() -> argparse.ArgumentParser:
         help="Stable Diffusion model to load: ckpt or safetensors file, merge LoRA models if omitted / 読み込むモデル、ckptまたはsafetensors。省略時はLoRAモデル同士をマージする",
     )
     parser.add_argument(
-        "--save_to", type=str,
-        default=None, help="destination file name: ckpt or safetensors file "
+        "--save_to", type=str, help="destination file name: ckpt or safetensors file "
     )
     parser.add_argument(
-        "--models", type=str, nargs="*", help="LoRA models to merge: ckpt or safetensors file / マージするLoRAモデル、ckptまたはsafetensors",
-        default=[r'../result/healing_wo_te.safetensors']       # r'../result/healing_wo_te.safetensors',
-    )
-    parser.add_argument("--ratios", type=float, nargs="*", help="ratios for each model / それぞれのLoRAモデルの比率",
-                        default=[1])
+        "--models", type=str, nargs="*", help="LoRA models to merge: ckpt or safetensors file")
+    parser.add_argument(
+        "--ratios", type=float, nargs="*", help="ratios for each model")
 
     # add
     parser.add_argument(
@@ -205,11 +254,29 @@ def setup_parser() -> argparse.ArgumentParser:
         "--prompt_txt", type=str, default=r'../config/prompt_test.txt'
     )
     parser.add_argument(
-        "--save_dir", type=str, default=r'E:\Data\test\healing'
+        "--save_dir", type=str, default=r'E:\Data\test\debug'
     )
     parser.add_argument(
         "--remark_info", type=str, default=r'debug'
     )
+    parser.add_argument(
+        "--locked_keys", type=str, nargs='+',
+        default=None, help="options:['down_blocks', 'mid_block', 'up_blocks']"
+    )
+
+    # process class model
+    # layer_wise
+    parser.add_argument(
+        "--class_blocks_ratios", type=float, nargs='+',
+        default=None
+    )
+    # multi lora layer-wise
+    parser.add_argument(
+        "--multi_lora_ratios", type=float, nargs='+',
+        default=None
+    )
+
+    # process blocks
 
     # unknow
     parser.add_argument(

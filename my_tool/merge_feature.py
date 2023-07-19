@@ -10,6 +10,7 @@ import library.model_util as model_util
 # from networks.lora import create_network_from_weights
 from my_tool.my_lib.merge import create_lora_from_weights
 from merge_param import image_inference
+from merge_param import seed_init
 
 
 def merge_feature(args):
@@ -61,10 +62,6 @@ def setup_parser() -> argparse.ArgumentParser:
     )
 
     # need to rewrite param
-    parser.add_argument(
-        "--save_to", type=str,
-        default=r'D:../result/merge_test/debug.safetensors', help="destination file name: ckpt or safetensors file "
-    )
     parser.add_argument(
         "--models", type=str, nargs="*", help="LoRA models to merge: ckpt or safetensors file / マージするLoRAモデル、ckptまたはsafetensors",
         default=[r'../result/healing_wo_te.safetensors']       # r'../result/healing_wo_te.safetensors',

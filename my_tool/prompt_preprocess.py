@@ -57,7 +57,7 @@ def prompt_preprocess(prompt):
                     continue
 
             except ValueError as ex:
-                print(f"Exception in parsing / 解析エラー: {parg}")
+                print(f"Exception in parsing : {parg}")
                 print(ex)
 
     return prompt, height, width, sample_steps, scale, negative_prompt, seed

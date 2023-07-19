@@ -34,7 +34,8 @@ from library.custom_train_functions import (
     scale_v_prediction_loss_like_noise_prediction,
 )
 
-from my_tool.cones_reproduction import find_concept_neurons
+from my_tool.cones_reproduction import Cones
+
 
 
 # TODO 他のスクリプトと共通化する
@@ -334,7 +335,7 @@ def train(args):
 
     network.prepare_grad_etc(text_encoder, unet)
 
-    if not cache_latents:  # キャッシュしない場合はVAEを使うのでVAEを準備する
+    if not cache_latents:  # 不缓存的情况下使用VAE，所以准备好VAE
         vae.requires_grad_(False)
         vae.eval()
         vae.to(accelerator.device, dtype=weight_dtype)
@@ -607,6 +608,8 @@ def train(args):
             print(f"removing old checkpoint: {old_ckpt_file}")
             os.remove(old_ckpt_file)
 
+    cones = Cones(network, train_text_encoder, train_unet, rho=0.5)
+    K = 0
     # training loop
     for epoch in range(num_train_epochs):
         if is_main_process:
@@ -689,7 +692,20 @@ def train(args):
                     accelerator.clip_grad_norm_(params_to_clip, args.max_grad_norm)
 
                 # find concept neurons
-                # find_concept_neurons(network, train_text_encoder, train_unet)
+                print(f"Step:{K}")
+                print("Saving the parameter state...")
+                cones.save_parameter_state()
+
+                K += 1
+                if K == 30:
+                    print("Finding the concept neurons")
+                    save_dir = r'D:\seekoo\SD\sd-scripts\cones'
+                    cones.find_concept_neurons(save_dir, th=0)
+                    exit(0)
+                    # save_path = r'D:\seekoo\SD\sd-scripts\cones\all_neurons.json'
+                    # cones.save_neurons(save_path)
+                else:
+                    continue
 
                 # update param
                 optimizer.step()
